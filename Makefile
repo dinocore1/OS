@@ -1,7 +1,10 @@
-.PHONY: all run
+.PHONY: all clean run
 
 
 all: kernel.bin
+
+clean:
+	rm -f kernel.bin *.o
 
 run: kernel.bin
 	qemu-system-i386 -kernel kernel.bin
