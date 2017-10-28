@@ -38,3 +38,33 @@ void clearScreen() {
   screen.cursorY = 0;
   updateCursor();
 }
+
+void printch(char c)
+{
+  uint8* vidmem = (uint8*)VMEM;
+  switch(c) {
+    case('\r'):
+      screen.cursorX = 0;
+      break;
+
+    case('\n'):
+      screen.cursorX = 0;
+      screen.cursorY++;
+      break;
+
+    default:
+      vidmem[(screen.cursorY * WIDTH + screen.cursorX)*SD] = c;
+      vidmem[(screen.cursorY * WIDTH + screen.cursorX)*SD + 1] = 0x0F;
+      screen.cursorX++;
+      break;
+  }
+}
+
+void print(char* str) {
+  uint16 i = 0;
+  while(str[i]) {
+    printch(str[i]);
+    i++;
+  }
+  updateCursor();
+}
