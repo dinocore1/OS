@@ -1,5 +1,7 @@
 .PHONY: all clean run
 
+CC := gcc
+CFLAGS := -m32 -Iinclude
 
 all: kernel.bin
 
@@ -9,11 +11,17 @@ clean:
 run: kernel.bin
 	qemu-system-i386 -kernel kernel.bin
 
-boot.o: boot.asm
-	nasm -felf32 boot.asm -o boot.o
+OBJ := \
+	boot.o \
+	kernel.o \
+	string.o \
+	drivers/screen.o
 
-kc.o: kernel.c
-	gcc -m32 -c kernel.c -o kc.o
+kernel.bin: $(OBJ)
+	ld -m elf_i386 -T link.ld -o kernel.bin  $(OBJ)
 
-kernel.bin: boot.o kc.o
-	ld -m elf_i386 -T link.ld -o kernel.bin  kc.o boot.o
+%.o : %.asm
+	nasm -felf32 -o $@ $<
+
+%.o : %.c
+	$(CC) -c $< $(CFLAGS) -o $@
