@@ -1,7 +1,7 @@
 .PHONY: all clean run
 
 CC := gcc
-CFLAGS := -m32 -Iinclude
+CFLAGS := -m32 -ffreestanding -Iinclude
 
 all: kernel.bin
 
